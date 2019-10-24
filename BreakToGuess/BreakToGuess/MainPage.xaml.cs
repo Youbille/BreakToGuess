@@ -13,13 +13,11 @@ namespace BreakToGuess
     public partial class MainPage : ContentPage
     {
         
-        private Platform game_platform = new Platform();
-        private Timer mainTimer;
-        private AbsoluteLayout mainLayout;
-        private Label timerLayout;
+        private Timer mainTimer; //timer for the timertick
+        private AbsoluteLayout mainLayout; //absolute layout for the game
+        private Label timerLayout; //label that shows the time
         private Ball default_ball;
         Image sprite_platform = new Image {Source = ImageSource.FromFile("platform.png")};
-        double  ballX,ballY;
         bool ball_is_under_platform = false;
         private int ball_delay;
         Random rand_direction = new Random();
@@ -34,12 +32,10 @@ namespace BreakToGuess
             Thread.Sleep(50);
             timerLayout = this.FindByName<Label>("timerLabel");
             mainLayout = this.FindByName<AbsoluteLayout>("main_game_layout");
-            //firstBrick = new Brick(Color.Red, 5 * Width / 6, 5 * Height / 6);
             mainLayout.Children.Add(sprite_platform, new Point(500,700)) ;
             mainLayout.Children.Add(default_ball.get_sprite(), new Point(0,0));
-            mainLayout.Children.Add(firstBrick.get_boxView(),new Point(500,20));
-            ballX = default_ball.get_pos_x();
-            ballY = default_ball.get_pos_y();
+            mainLayout.Children.Add(firstBrick.get_boxView());
+ 
         }
         
         private void timer_tick(object state)
@@ -47,27 +43,26 @@ namespace BreakToGuess
             ball_delay--;
             if (ball_delay <= 0)
             {
-                ballX += default_ball.get_speedX();
-                ballY += default_ball.get_speedY();
-                default_ball.maybe_simpler_brickcoll_interrogation_point(ballX, ballY, firstBrick);
-                ball_is_under_platform = default_ball.handle_collisions(Width, sprite_platform, ballX, ballY);
+                default_ball.setX(default_ball.getX() + default_ball.get_speedX());
+                default_ball.setY(default_ball.getY() + default_ball.get_speedY());
+                //default_ball.maybe_simpler_brickcoll_interrogation_point(ballX, ballY, firstBrick);
+                ball_is_under_platform = default_ball.handle_collisions(Width, sprite_platform, default_ball.getX(), default_ball.getY()); //the collisions handler says if the ball is under the platform or not
                 if (ball_is_under_platform)
                 {
-                    ballX = Width/2;
-                    ballY = Height/2;
-                    default_ball.set_speed(rand_direction.Next(0,0), rand_direction.Next(-15, -15));
+                    default_ball.setX(Width / 2);
+                    default_ball.setY(Height / 2);
+                    default_ball.set_speed(rand_direction.Next(15,15), rand_direction.Next(-10,10));
                     ball_delay = 30;
                     ball_is_under_platform = false;
                 }
-                Device.BeginInvokeOnMainThread(MainThreadCode);
+                Device.BeginInvokeOnMainThread(mainDraw);
             }
         }
 
-        private void MainThreadCode()
+        private void mainDraw()
         {
-            timerLayout.Text = DateTime.Now.ToString();
-            if(!ball_is_under_platform)default_ball.move(ballX, ballY);
-            
+            firstBrick.draw();
+            if(!ball_is_under_platform)default_ball.move(default_ball.getX(), default_ball.getY());
         }
     }
 }

@@ -11,6 +11,8 @@ namespace BreakToGuess
         private Image sprite;
         private int speedX;
         private int speedY;
+        private double X;
+        private double Y;
 
         public Ball(string name_of_file, int speed)
         {
@@ -32,16 +34,6 @@ namespace BreakToGuess
         {
             return sprite;
         }
-        public double get_pos_x()
-        {
-            return sprite.X;
-        }
-
-        public double get_pos_y()
-        {
-            return sprite.Y;
-        }
-
         public void set_pos(double newX, double newY)
         {
             sprite.TranslateTo(newX, newY, 1);//It looks like "translateTo doesn't inherently change the position of the image
@@ -57,30 +49,54 @@ namespace BreakToGuess
             
             set_pos(incrementedX, incrementedY);
         }
+
+        public double getX()
+        {
+            return X;
+        }
+
+        public void setX(double newX)
+        {
+            X = newX;
+        }
+
+        public double getY()
+        {
+            return Y;
+        }
+        public void setY(double newY)
+        {
+            Y = newY;
+        }
+
+        public void draw(AbsoluteLayout layout)
+        {
+            layout.Children.Add(sprite,new Point(X,Y));
+        }
         public bool handle_collisions(double xLayoutLimit, Image platform, double actual_posX, double actual_posY)
         {
             bool under_platform = false;
             if (actual_posX < 0)
             {
                 speedX = -speedX;
-                set_pos(0, get_pos_y());
+                set_pos(0, getX());
             }
             if (actual_posX + sprite.Width > xLayoutLimit)
             {
                 speedX = -speedX;
-                set_pos(xLayoutLimit - sprite.Width, get_pos_y());
+                set_pos(xLayoutLimit - sprite.Width, getY());
             }
             if (actual_posY < 0)
             {
                 speedY = -speedY;
-                set_pos(get_pos_x(), 0);
+                set_pos(getY(), 0);
             }
             if (actual_posY + sprite.Height > platform.Y + platform.Height)
             {
                 if (actual_posX + sprite.Width > platform.X && actual_posX < platform.X + platform.Width)
                 {
                     speedY = -speedY;
-                    set_pos(get_pos_x(), 0);
+                    set_pos(getX(), 0);
                 }
                 else
                 {
@@ -104,9 +120,14 @@ namespace BreakToGuess
                     
                     //if (actualY + sprite.Height > brick.get_posY() && speedY >= 0 )
                     //{
-                    //    Debug.WriteLine("prout");
+                    //    Debug.WriteLine("collision");
                     //    speedY = -speedY;
                     //}
+                    if (actualX + sprite.Width > brick.get_posX() && actualY < brick.get_posY() + brick.get_height() && actualY + sprite.Height < brick.get_height() )
+                    {
+                        Debug.WriteLine("collision : leftside");
+                        speedX = -speedX;
+                    }
 
                 }
             }
