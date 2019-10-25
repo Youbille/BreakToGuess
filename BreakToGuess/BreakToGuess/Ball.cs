@@ -36,7 +36,9 @@ namespace BreakToGuess
         }
         public void set_pos(double newX, double newY)
         {
-            sprite.TranslateTo(newX, newY, 1);//It looks like "translateTo doesn't inherently change the position of the image
+            X = newX;
+            Y = newY;
+            //sprite.TranslateTo(newX, newY, 1);//It looks like "translateTo doesn't inherently change the position of the image
         }
 
         public void set_speed(int new_speedX, int new_speedY)
@@ -69,34 +71,34 @@ namespace BreakToGuess
             Y = newY;
         }
 
-        public void draw(AbsoluteLayout layout)
+        public void draw()
         {
-            layout.Children.Add(sprite,new Point(X,Y));
+            sprite.TranslateTo(X, Y, 1);
         }
-        public bool handle_collisions(double xLayoutLimit, Image platform, double actual_posX, double actual_posY)
+        public bool handle_collisions(double xLayoutLimit, Image platform)
         {
             bool under_platform = false;
-            if (actual_posX < 0)
+            if (X < 0)
             {
                 speedX = -speedX;
-                set_pos(0, getX());
+                set_pos(0, this.Y);
             }
-            if (actual_posX + sprite.Width > xLayoutLimit)
+            if (X + sprite.Width > xLayoutLimit)
             {
                 speedX = -speedX;
-                set_pos(xLayoutLimit - sprite.Width, getY());
+                set_pos(xLayoutLimit - sprite.Width, this.Y);
             }
-            if (actual_posY < 0)
+            if (Y < 0)
             {
                 speedY = -speedY;
-                set_pos(getY(), 0);
+                set_pos(this.X, 0);
             }
-            if (actual_posY + sprite.Height > platform.Y + platform.Height)
+            if (Y + sprite.Height > platform.Y + platform.Height)
             {
-                if (actual_posX + sprite.Width > platform.X && actual_posX < platform.X + platform.Width)
+                if (X + sprite.Width > platform.X && X < platform.X + platform.Width)
                 {
                     speedY = -speedY;
-                    set_pos(getX(), 0);
+                    set_pos(this.X, 0);
                 }
                 else
                 {
@@ -132,125 +134,125 @@ namespace BreakToGuess
                 }
             }
         }
-        //public double handle_Y_brick_collision(double actual_posY, double actual_posX, Brick brick)
+        //public double handle_Y_brick_collision(double Y, double X, Brick brick)
         //{
-        //    //if (IsCloseEnough(actual_posX, actual_posY, brick))
+        //    //if (IsCloseEnough(X, Y, brick))
         //    {
         //        if
-        //        ((actual_posY + sprite.Height > brick.get_posY() &&
-        //          actual_posX + sprite.Width > brick.get_posX() &&
-        //          actual_posX < brick.get_posX() + brick.get_boxView().Width) ||
-        //         (actual_posY < brick.get_posY() + brick.get_boxView().Height &&
-        //          actual_posX + sprite.Width > brick.get_posX() &&
-        //          actual_posX < brick.get_posX() + brick.get_boxView().Width))
-        //       // ((actual_posY + sprite.Height > brick.get_posY() &&
-        //       // actual_posX + sprite.Width > brick.get_posX() &&
-        //       // actual_posX < brick.get_posX() + brick.get_boxView().Width) ||
-        //       //(actual_posY < brick.get_posY() + brick.get_boxView().Height &&
-        //       // actual_posX + sprite.Width > brick.get_posX() &&
-        //       // actual_posX < brick.get_posX() + brick.get_boxView().Width) ||
-        //       //     (actual_posX + sprite.Width > brick.get_posX() && actual_posY + sprite.Height > brick.get_posY() &&
-        //       //      actual_posY < brick.get_posY() + brick.get_boxView().Height) ||
-        //       //     (actual_posX < brick.get_posX() + brick.get_boxView().Width &&
-        //       //      actual_posY + sprite.Height > brick.get_posY() &&
-        //       //      actual_posY < brick.get_posY() + brick.get_boxView().Height))
+        //        ((Y + sprite.Height > brick.get_posY() &&
+        //          X + sprite.Width > brick.get_posX() &&
+        //          X < brick.get_posX() + brick.get_boxView().Width) ||
+        //         (Y < brick.get_posY() + brick.get_boxView().Height &&
+        //          X + sprite.Width > brick.get_posX() &&
+        //          X < brick.get_posX() + brick.get_boxView().Width))
+        //       // ((Y + sprite.Height > brick.get_posY() &&
+        //       // X + sprite.Width > brick.get_posX() &&
+        //       // X < brick.get_posX() + brick.get_boxView().Width) ||
+        //       //(Y < brick.get_posY() + brick.get_boxView().Height &&
+        //       // X + sprite.Width > brick.get_posX() &&
+        //       // X < brick.get_posX() + brick.get_boxView().Width) ||
+        //       //     (X + sprite.Width > brick.get_posX() && Y + sprite.Height > brick.get_posY() &&
+        //       //      Y < brick.get_posY() + brick.get_boxView().Height) ||
+        //       //     (X < brick.get_posX() + brick.get_boxView().Width &&
+        //       //      Y + sprite.Height > brick.get_posY() &&
+        //       //      Y < brick.get_posY() + brick.get_boxView().Height))
         //        {
         //            if (speedY >= 0)
         //            {
         //                speedY = -speedY;
-        //                //set_pos(actual_posX, (brick.get_posY() - sprite.Height));
-        //                Debug.WriteLine("collision,speedY > 0" + " and brick Y position : " + brick.get_posY() + "\n" + "Ball position" + actual_posY);
-        //                //actual_posY = brick.get_posY() - sprite.Height;
+        //                //set_pos(X, (brick.get_posY() - sprite.Height));
+        //                Debug.WriteLine("collision,speedY > 0" + " and brick Y position : " + brick.get_posY() + "\n" + "Ball position" + Y);
+        //                //Y = brick.get_posY() - sprite.Height;
         //            }
         //            else if (speedY <= 0)
         //            {
         //                speedY = -speedY;
-        //                //set_pos(actual_posX, (brick.get_posY() + brick.get_boxView().Height));
-        //                Debug.WriteLine("collision, speedY < 0" + " and brick Y position : " + brick.get_posY() + "\n" + "Ball position" + actual_posY);
-        //                //actual_posY = brick.get_posY() + brick.get_boxView().Height; 
+        //                //set_pos(X, (brick.get_posY() + brick.get_boxView().Height));
+        //                Debug.WriteLine("collision, speedY < 0" + " and brick Y position : " + brick.get_posY() + "\n" + "Ball position" + Y);
+        //                //Y = brick.get_posY() + brick.get_boxView().Height; 
         //            }
         //        }
         //    }
 
-        //    return actual_posY;
+        //    return Y;
         //}
-        //public double handle_north_brick_collision(double actual_posY, double actual_posX, Brick brick)
+        //public double handle_north_brick_collision(double Y, double X, Brick brick)
         //{
         //    if (speedY >= 0)
         //    {
-        //        if (actual_posY + sprite.Height > brick.get_boxView().Y &&
-        //            actual_posX + sprite.Width > brick.get_posX() && actual_posX < brick.get_posX() + brick.get_boxView().Width)
+        //        if (Y + sprite.Height > brick.get_boxView().Y &&
+        //            X + sprite.Width > brick.get_posX() && X < brick.get_posX() + brick.get_boxView().Width)
         //        {
         //            speedY = -speedY;
-        //            set_pos(actual_posX, (brick.get_posY() - sprite.Height));
+        //            set_pos(X, (brick.get_posY() - sprite.Height));
         //            //TODO : find why the two speedY conflict each other (maybe position updated poorly or distance not well rendered)
         //            Debug.WriteLine("collision");
-        //            actual_posY = brick.get_posY() - sprite.Height;
+        //            Y = brick.get_posY() - sprite.Height;
         //        }
         //    }
-        //    return actual_posY;
+        //    return Y;
         //}
 
-        //public double handle_south_brick_collision(double actual_posY, double actual_posX, Brick brick)
+        //public double handle_south_brick_collision(double Y, double X, Brick brick)
         //{
         //    if (speedY <= 0)
         //    {
-        //        if (actual_posY < brick.get_posY() + brick.get_boxView().Height &&
-        //            actual_posX + sprite.Width > brick.get_posX() &&
-        //            actual_posX < brick.get_posX() + brick.get_boxView().Width)
+        //        if (Y < brick.get_posY() + brick.get_boxView().Height &&
+        //            X + sprite.Width > brick.get_posX() &&
+        //            X < brick.get_posX() + brick.get_boxView().Width)
         //        {
-        //            //Debug.WriteLine(actual_posY);
+        //            //Debug.WriteLine(Y);
         //            speedY = -speedY;
-        //            set_pos(actual_posX, (brick.get_posY() + brick.get_boxView().Height));
+        //            set_pos(X, (brick.get_posY() + brick.get_boxView().Height));
         //            Debug.WriteLine("collision");
-        //            actual_posY = brick.get_posY() + brick.get_boxView().Height;
+        //            Y = brick.get_posY() + brick.get_boxView().Height;
 
         //        }
         //    }
 
-        //    return actual_posY;
+        //    return Y;
         //}
-        //public void handle_brick_collisions(double actual_posX, double actual_posY, Brick brick)//This huge chunk of test is just to calculate if the actual distance is less than the maximum distance
+        //public void handle_brick_collisions(double X, double Y, Brick brick)//This huge chunk of test is just to calculate if the actual distance is less than the maximum distance
         //{//This test needs to be heavily refactored by extracting a proper method
-        //    if (IsCloseEnough(actual_posX, actual_posY, brick))
+        //    if (IsCloseEnough(X, Y, brick))
         //    {
         //        if (speedX > 0)//may be an issue if speed is exactly equals to 0
         //        {
-        //            if (actual_posX + sprite.Width > brick.get_posX() && actual_posY + sprite.Height > brick.get_posY() && actual_posY < brick.get_posY() + brick.get_boxView().Height)
+        //            if (X + sprite.Width > brick.get_posX() && Y + sprite.Height > brick.get_posY() && Y < brick.get_posY() + brick.get_boxView().Height)
         //            {
         //                speedX = -speedX;
-        //                //set_pos(brick.get_posX() - sprite.Width, actual_posY);
+        //                //set_pos(brick.get_posX() - sprite.Width, Y);
         //            }
         //        }
         //        else
         //        {
-        //            if (actual_posX < brick.get_posX() + brick.get_boxView().Width && actual_posY + sprite.Height > brick.get_posY() && actual_posY < brick.get_posY() + brick.get_boxView().Height)
+        //            if (X < brick.get_posX() + brick.get_boxView().Width && Y + sprite.Height > brick.get_posY() && Y < brick.get_posY() + brick.get_boxView().Height)
         //            {
         //                speedX = -speedX;
-        //                //set_pos(brick.get_posX() + brick.get_boxView().Width, actual_posY);
+        //                //set_pos(brick.get_posX() + brick.get_boxView().Width, Y);
         //            }
         //        }
 
         //        if (speedY >= 0)//may be an issue if speed is exactly equals to 0
         //        {
-        //            if (actual_posY + sprite.Height > brick.get_boxView().Y &&
-        //                actual_posX + sprite.Width > brick.get_posX() && actual_posX < brick.get_posX() + brick.get_boxView().Width)
+        //            if (Y + sprite.Height > brick.get_boxView().Y &&
+        //                X + sprite.Width > brick.get_posX() && X < brick.get_posX() + brick.get_boxView().Width)
         //            {
         //                speedY = -speedY;
-        //                set_pos(actual_posX, (brick.get_posY() - sprite.Height));
+        //                set_pos(X, (brick.get_posY() - sprite.Height));
         //                //TODO : find why the two speedY conflict each other (maybe position updated poorly or distance not well rendered)
         //                Debug.WriteLine("collision");
         //            }
         //        }
         //        else if (speedY <= 0)
         //        {
-        //            if (actual_posY < brick.get_posY() + brick.get_boxView().Height &&
-        //                actual_posX + sprite.Width > brick.get_posX() &&
-        //                actual_posX < brick.get_posX() + brick.get_boxView().Width)
+        //            if (Y < brick.get_posY() + brick.get_boxView().Height &&
+        //                X + sprite.Width > brick.get_posX() &&
+        //                X < brick.get_posX() + brick.get_boxView().Width)
         //            {
-        //                //Debug.WriteLine(actual_posY);
+        //                //Debug.WriteLine(Y);
         //                speedY = -speedY;
-        //                set_pos(actual_posX, (brick.get_posY() + brick.get_boxView().Height));
+        //                set_pos(X, (brick.get_posY() + brick.get_boxView().Height));
         //                Debug.WriteLine("collision");
         //            }
         //        }

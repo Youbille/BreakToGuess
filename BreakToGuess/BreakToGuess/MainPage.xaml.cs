@@ -46,7 +46,7 @@ namespace BreakToGuess
                 default_ball.setX(default_ball.getX() + default_ball.get_speedX());
                 default_ball.setY(default_ball.getY() + default_ball.get_speedY());
                 //default_ball.maybe_simpler_brickcoll_interrogation_point(ballX, ballY, firstBrick);
-                ball_is_under_platform = default_ball.handle_collisions(Width, sprite_platform, default_ball.getX(), default_ball.getY()); //the collisions handler says if the ball is under the platform or not
+                ball_is_under_platform = default_ball.handle_collisions(Width, sprite_platform); //the collisions handler says if the ball is under the platform or not
                 if (ball_is_under_platform)
                 {
                     default_ball.setX(Width / 2);
@@ -62,7 +62,7 @@ namespace BreakToGuess
         private void mainDraw()
         {
             firstBrick.draw();
-            if(!ball_is_under_platform)default_ball.move(default_ball.getX(), default_ball.getY());
+            if (!ball_is_under_platform) default_ball.draw();
         }
     }
 }
