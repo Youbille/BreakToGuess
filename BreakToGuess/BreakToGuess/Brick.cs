@@ -8,17 +8,20 @@ namespace BreakToGuess
     class Brick
     {
         private BoxView brick;
+        private double X;
+        private double Y;
+        private Color color;
         public Brick(Color color_brick, double posX, double posY)
         {
+            color = color_brick;
             brick = new BoxView
             {
-
-                Color = color_brick,
+                Color = color,
                 WidthRequest = 30,
                 HeightRequest = 10,
-                AnchorX = posX,
-                AnchorY = posY
             };
+            X = posX;
+            Y = posY;
         }
         public BoxView get_boxView()
         {
@@ -27,11 +30,11 @@ namespace BreakToGuess
 
         public double get_posX()
         {
-            return brick.X;
+            return X;
         }
         public double get_posY()
         {
-            return brick.Y;
+            return Y;
         }
 
         public double get_height()
@@ -43,9 +46,9 @@ namespace BreakToGuess
             return brick.Width;
         }
          public  void draw()
-        {
-            AbsoluteLayout.SetLayoutBounds(brick,new Rectangle(get_posX(),get_posY(),30,10));
-        }
+         {
+             brick.TranslateTo(X, Y, 1);
+         }
 
     }
 }

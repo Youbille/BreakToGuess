@@ -14,11 +14,13 @@ namespace BreakToGuess
         private double X;
         private double Y;
 
-        public Ball(string name_of_file, int speed)
+        public Ball(string name_of_file, int speed, double initX, double initY)
         {
             sprite = new Image { Source = ImageSource.FromFile(name_of_file) };
             speedX = speed;
             speedY = speed;
+            X = initX;
+            Y = initY;
         }
 
         public int get_speedX()
@@ -46,12 +48,6 @@ namespace BreakToGuess
             speedX = new_speedX;
             speedY = new_speedY;
         }
-        public void move(double incrementedX, double incrementedY)
-        {
-            
-            set_pos(incrementedX, incrementedY);
-        }
-
         public double getX()
         {
             return X;
@@ -73,7 +69,7 @@ namespace BreakToGuess
 
         public void draw()
         {
-            sprite.TranslateTo(X, Y, 1);
+            sprite.TranslateTo(X, Y, 50);
         }
         public bool handle_collisions(double xLayoutLimit, Image platform)
         {
@@ -93,12 +89,12 @@ namespace BreakToGuess
                 speedY = -speedY;
                 set_pos(this.X, 0);
             }
-            if (Y + sprite.Height > platform.Y + platform.Height)
+            if (platform.Height != -1 && Y + sprite.Height > platform.Y + platform.Height)
             {
                 if (X + sprite.Width > platform.X && X < platform.X + platform.Width)
                 {
                     speedY = -speedY;
-                    set_pos(this.X, 0);
+                    set_pos(this.X, platform.Y - sprite.Height);
                 }
                 else
                 {
@@ -108,30 +104,39 @@ namespace BreakToGuess
             return under_platform;
         }
 
-        public void maybe_simpler_brickcoll_interrogation_point(double actualX, double actualY, Brick brick)
+        public void brick_collision(Brick brick)
         {
-            //if (IsCloseEnough(actualX,actualY,brick))
             {
-                if (actualX < brick.get_posX() + brick.get_width() && actualX + sprite.Width > brick.get_posX())
+                if (X < brick.get_posX() + brick.get_width() && X + sprite.Width > brick.get_posX())
                 {
-                    if (actualY < brick.get_posY() + brick.get_height() && speedY <= 0)
+                    if (Y + sprite.Height > brick.get_posY() + brick.get_height() && Y < brick.get_posY() + brick.get_height() && speedY <= 0)
                     {
-                        Debug.WriteLine("collision");
+                        Debug.WriteLine("collision bottom");
                         speedY = -speedY;
                     }
-                    
-                    //if (actualY + sprite.Height > brick.get_posY() && speedY >= 0 )
-                    //{
-                    //    Debug.WriteLine("collision");
-                    //    speedY = -speedY;
-                    //}
-                    if (actualX + sprite.Width > brick.get_posX() && actualY < brick.get_posY() + brick.get_height() && actualY + sprite.Height < brick.get_height() )
+                    else if (Y <= brick.get_posY() && Y + sprite.Height > brick.get_posY() && speedY >= 0)
+                    {
+                        Debug.WriteLine("collision toppom");
+                        speedY = -speedY;
+                    }
+
+                }
+                else if (Y + sprite.Height > brick.get_posY() && Y < brick.get_posY() + brick.get_height())
+                {
+                    if (X < brick.get_posX() && X + sprite.Width > brick.get_posX() && speedX >= 0)
                     {
                         Debug.WriteLine("collision : leftside");
                         speedX = -speedX;
                     }
+                    else if (X + sprite.Height > brick.get_posX() + brick.get_height() && X < brick.get_posX() + brick.get_width() && speedX <= 0)
+                    {
+                        Debug.WriteLine("collision : rightside");
+                        speedX = -speedX;
+                    }
 
                 }
+
+
             }
         }
         //public double handle_Y_brick_collision(double Y, double X, Brick brick)
