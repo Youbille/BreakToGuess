@@ -68,9 +68,9 @@ namespace BreakToGuess
 
         public void draw()
         {
-            sprite.TranslateTo(X, Y, 50);
+            sprite.TranslateTo(X, Y, 60);
         }
-        public bool handle_collisions(double xLayoutLimit, Image platform)
+        public bool handle_collisions(double xLayoutLimit,double yLayoutLimit, Stick platform)
         {
             bool under_platform = false;
             if (X < 0)
@@ -88,14 +88,15 @@ namespace BreakToGuess
                 speedY = -speedY;
                 set_pos(this.X, 0);
             }
-            if (platform.Height != -1 && Y + sprite.Height > platform.Y + platform.Height)
+            if ( Y + sprite.Height > Stick.getY())
             {
-                if (X + sprite.Width > platform.X && X < platform.X + platform.Width)
+                
+                if (X + sprite.Width > Stick.getX() && X +sprite.Width/2 < Stick.getX() + Stick.platform.Width)
                 {
                     speedY = -speedY;
-                    set_pos(this.X, platform.Y - sprite.Height);
+                    set_pos(this.X, Stick.getY() - sprite.Height);
                 }
-                else
+                else if(Y + sprite.Height > yLayoutLimit-70)
                 {
                     under_platform = true;
                 }
@@ -121,9 +122,8 @@ namespace BreakToGuess
                         speedY = -speedY;
                         collides = true;
                     }
-
                 }
-                else if (Y + sprite.Height > brick.get_posY() && Y < brick.get_posY() + brick.get_height())
+                if (Y + sprite.Height > brick.get_posY() && Y < brick.get_posY() + brick.get_height())
                 {
                     if (X < brick.get_posX() && X + sprite.Width > brick.get_posX() && speedX >= 0)
                     {
@@ -131,13 +131,12 @@ namespace BreakToGuess
                         speedX = -speedX;
                         collides = true;
                     }
-                    else if (X + sprite.Height > brick.get_posX() + brick.get_height() && X < brick.get_posX() + brick.get_width() && speedX <= 0)
+                    if (X + sprite.Height > brick.get_posX() + brick.get_width() && X < brick.get_posX() + brick.get_width() && speedX <= 0)
                     {
                         Debug.WriteLine("collision : rightside");
                         speedX = -speedX;
                         collides = true;
                     }
-
                 }
             }
             return collides;

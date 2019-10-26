@@ -13,17 +13,21 @@ namespace BreakToGuess
         private double Y;
         private Color color;
         private int damage;
+        private int trueHeight;
+        private int trueWidth;
         //private SynchronizationContext context;
-        public Brick(Color color_brick, double posX, double posY)
+        public Brick(Color color_brick, double posX, double posY, int reqHeight, int reqWidth)
         {
             //context = SynchronizationContext.Current;
             damage = 0;
             color = color_brick;
+            trueHeight = reqHeight;
+            trueWidth = reqWidth;
             brick = new BoxView
             {
                 Color = color,
-                WidthRequest = 30,
-                HeightRequest = 10,
+                WidthRequest = trueWidth,
+                HeightRequest = trueHeight,
             };
             X = posX;
             Y = posY;
@@ -51,17 +55,17 @@ namespace BreakToGuess
             return Y;
         }
 
-        public double get_height()
+        public int get_height()
         {
-            return brick.Height;
+            return trueHeight;
         }
-        public double get_width()
+        public int get_width()
         {
-            return brick.Width;
+            return trueWidth;
         }
         public void draw()
         {
-            brick.TranslateTo(X, Y, 1);
+            brick.TranslateTo(X, Y, 0);
         }
 
         public void collision_with_ball(bool ball_collides)
@@ -69,10 +73,10 @@ namespace BreakToGuess
             //context.Post(new SendOrPostCallback(this), brick);
             if (ball_collides)//SOlutions to modify the color : each color diminishes but we test for each color/we find something general
             {
-                damage++;
+                damage++; //I must try to understand the syncContext class in order to change the color properly
                 //if (damage == 1) brick.Color = Color.Red;
                 //if (damage == 2) brick.Color = Color.IndianRed;
-                //if (damage == 3)
+                //if (damage == 3) 
                 {
                     setX(5000);//Is this cheating ? You decide
                     setY(5000);
