@@ -4,19 +4,55 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="BreakToGuess.MainPage">
+             x:Class="BreakToGuess.MainPage"
+             BackgroundImageSource="fond2.png"
+             >
 
-    <AbsoluteLayout x:Name="main_game_layout"
-                    BackgroundColor="Black">
-        <Label x:Name="timerLabel"
-                  TextColor="White"
-                  FontSize="Medium"
-                  AbsoluteLayout.LayoutBounds="0.5 , 1 , 0.5, 1"
-                  AbsoluteLayout.LayoutFlags="All"
-                  >
-        </Label>
-        <Button Clicked="Button_OnClicked" BackgroundColor="GhostWhite">
-        </Button>
-    </AbsoluteLayout>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <ImageButton Source="boulonfond.png"
+                     Grid.Row="0"
+                     Grid.Column="0"
+                     Grid.ColumnSpan="2"
+                     Grid.RowSpan="2"
+                     Clicked="Button_Clicked"/>
+
+
+        <Image Source="back2.png"
+               Grid.Row="1"
+               Grid.Column="0"
+               Grid.ColumnSpan="10"
+               Grid.RowSpan="10"
+        />
+        <Button Text="Play"
+                Grid.Row="11"
+                Grid.Column="2"
+                Grid.ColumnSpan="6"
+                Grid.RowSpan="2"
+                BackgroundColor="Red"
+                FontSize="Title"
+                TextColor="WhiteSmoke"
+                FontAttributes="Bold"
+                Clicked="Button_OnClicked"/>
+
+
+        <Label Text="Mobile App Programming 2019-2020"
+               FontSize="Micro"
+               TextColor="White"
+               Grid.Row="15"
+               Grid.Column="1"
+               Grid.ColumnSpan="8"
+               HorizontalOptions="Center"/>
+
+
+    </Grid>
 </ContentPage>

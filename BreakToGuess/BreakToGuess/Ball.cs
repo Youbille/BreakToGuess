@@ -91,7 +91,7 @@ namespace BreakToGuess
             if ( Y >Stick.getY())
             {
                 
-                if ((Y >= Stick.getY() + 3 || Y <= Stick.getY() - 3) && X + sprite.Width > Stick.getX() && X  < Stick.getX() + Stick.platform.Width)
+                if (Y < Stick.getY() +Stick.platform.Height && X + sprite.Width > Stick.getX() && X  < Stick.getX() + Stick.platform.Width)
                 {
                     speedY = -speedY;
                     set_pos(this.X, Stick.getY() - sprite.Height);
@@ -136,7 +136,7 @@ namespace BreakToGuess
                     }
                     else if (X + sprite.Height > brick.get_posX() + brick.get_width() && X < brick.get_posX() + brick.get_width() && speedX <= 0)
                     {
-                        Debug.WriteLine("collision : rightside"); //TODO : change collisions, right collides doesn't seem t owork properly
+                        Debug.WriteLine("collision : rightside"); 
                         speedX = -speedX;
                         setX(brick.get_posX() + brick.get_width());
                         collides = true;
