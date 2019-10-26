@@ -88,15 +88,15 @@ namespace BreakToGuess
                 speedY = -speedY;
                 set_pos(this.X, 0);
             }
-            if ( Y + sprite.Height > Stick.getY())
+            if ( Y >Stick.getY())
             {
                 
-                if (X + sprite.Width > Stick.getX() && X +sprite.Width/2 < Stick.getX() + Stick.platform.Width)
+                if ((Y >= Stick.getY() + 3 || Y <= Stick.getY() - 3) && X + sprite.Width > Stick.getX() && X  < Stick.getX() + Stick.platform.Width)
                 {
                     speedY = -speedY;
                     set_pos(this.X, Stick.getY() - sprite.Height);
                 }
-                else if(Y + sprite.Height > yLayoutLimit-70)
+                else if(Y + sprite.Height > yLayoutLimit)
                 {
                     under_platform = true;
                 }
@@ -114,12 +114,14 @@ namespace BreakToGuess
                     {
                         Debug.WriteLine("collision bottom");
                         speedY = -speedY;
+                        setY(brick.get_posY() + brick.get_height());
                         collides = true;
                     }
                     else if (Y <= brick.get_posY() && Y + sprite.Height > brick.get_posY() && speedY >= 0)
                     {
                         Debug.WriteLine("collision toppom");
                         speedY = -speedY;
+                        setY(brick.get_posY() - sprite.Height);
                         collides = true;
                     }
                 }
@@ -129,12 +131,14 @@ namespace BreakToGuess
                     {
                         Debug.WriteLine("collision : leftside");
                         speedX = -speedX;
+                        setX(brick.get_posX() - sprite.Width);
                         collides = true;
                     }
-                    if (X + sprite.Height > brick.get_posX() + brick.get_width() && X < brick.get_posX() + brick.get_width() && speedX <= 0)
+                    else if (X + sprite.Height > brick.get_posX() + brick.get_width() && X < brick.get_posX() + brick.get_width() && speedX <= 0)
                     {
-                        Debug.WriteLine("collision : rightside");
+                        Debug.WriteLine("collision : rightside"); //TODO : change collisions, right collides doesn't seem t owork properly
                         speedX = -speedX;
+                        setX(brick.get_posX() + brick.get_width());
                         collides = true;
                     }
                 }
