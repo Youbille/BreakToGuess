@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="BreakToGuess.BallSelectionPage"
+             BackgroundImageSource="fond2.png"
+             >
+    <ContentPage.Content>
+        <AbsoluteLayout>
+            <ImageButton x:Name="footBall" 
+                         Source ="footBall.png"
+                         AbsoluteLayout.LayoutBounds="0.5,0,0.1,0.1"
+                         AbsoluteLayout.LayoutFlags="All"
+                         BackgroundColor="Transparent"
+                         Clicked="FootBall_OnClicked"/>
+            <ImageButton x:Name="tennisBall" 
+                         Source ="tennisBall.png"
+                         AbsoluteLayout.LayoutBounds="0.5,0.2,0.2,0.2"
+                         AbsoluteLayout.LayoutFlags="All"
+                         BackgroundColor="Transparent"
+                         Clicked="TennisBall_OnClicked"/>
+            <ImageButton x:Name="poolBall" 
+                         Source ="poolBall.png"
+                         AbsoluteLayout.LayoutBounds="0.5,0.4,0.2,0.2"
+                         AbsoluteLayout.LayoutFlags="All"
+                         BackgroundColor="Transparent"
+                         Clicked="PoolBall_OnClicked"/>
+            <ImageButton x:Name="frenchBall" 
+                         Source ="frenchBall.png"
+                         AbsoluteLayout.LayoutBounds="0.5,0.6,0.2,0.2"
+                         AbsoluteLayout.LayoutFlags="All"
+                         BackgroundColor="Transparent"
+                         Clicked="FrenchBall_OnClicked"/>
+            <ImageButton x:Name="italyBall" 
+                         Source ="italyBall.png"
+                         AbsoluteLayout.LayoutBounds="0.5,0.8,0.2,0.2"
+                         AbsoluteLayout.LayoutFlags="All"
+                         Clicked="ItalyBall_OnClicked"
+                         BackgroundColor="Transparent"
+                         />
+            <ImageButton x:Name="return"
+                         Source="returnArrow"
+                    AbsoluteLayout.LayoutBounds="0,1,0.2,0.2"
+                    AbsoluteLayout.LayoutFlags="All"
+                         BackgroundColor="Transparent"
+                    Clicked="Return_OnClicked"></ImageButton>
+
+
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

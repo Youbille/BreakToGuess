@@ -31,5 +31,10 @@ namespace BreakToGuess
         {
             Navigation.PushModalAsync(new Page1(6, 7, Color.DarkGreen, Color.ForestGreen));
         }
+
+        private void Return_OnClicked(object sender, EventArgs e)
+        {
+            Navigation.PopModalAsync();
+        }
     }
 }

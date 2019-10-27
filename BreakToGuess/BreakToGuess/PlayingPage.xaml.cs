@@ -22,6 +22,7 @@ namespace BreakToGuess
         private Brick[,] grid;
         private int lives, ball_delay;
         private Label livesLabel;
+        public static string ball_name;
         public Page1(int width,int height, Color firstColor,Color secondColor)
         {
             try
@@ -36,7 +37,7 @@ namespace BreakToGuess
             livesLabel = this.FindByName<Label>("LivesLabel");
             Stick.Initialize();
             lives = 3;
-            ball = new Ball("Ball_breakToGuess.png",5,App.Current.MainPage.Height/2,App.Current.MainPage.Width/2);
+            ball = new Ball(ball_name,5,App.Current.MainPage.Height/2,App.Current.MainPage.Width/2);
             templateBrick=new Brick(Color.Red, 0,0, 30,70);
             lay.Children.Add(Stick.platform);
             lay.Children.Add(ball.get_sprite());
@@ -53,6 +54,7 @@ namespace BreakToGuess
                     lay.Children.Add(grid[i,j].get_boxView());
                 }
             }
+            Thread.Sleep(1000);
             Timer mainTimer = new Timer(timer_tick);
             mainTimer.Change(0, 33);
         }
@@ -111,12 +113,13 @@ namespace BreakToGuess
             {
                 for (int j = 0; j < grid.GetLength(1); j++)
                 {
-                    Color color;
-                    if ((i + j) % 2 == 0) color = Color.Red;
-                    else color = Color.DarkOrange;
-                    grid[i, j] = new Brick(color, j * templateBrick.get_width(), i * templateBrick.get_height(), templateBrick.get_height(), templateBrick.get_width());
+                    grid[i,j].setX(j * templateBrick.get_width());
+                    grid[i,j].setY(i * templateBrick.get_height());
                 }
             }
+            lives = 3;
+            Thread.Sleep(2000);
+            ball.set_pos(App.Current.MainPage.Width / 2, App.Current.MainPage.Height / 2);
         }
 
         private void mainDraw()
@@ -150,6 +153,31 @@ namespace BreakToGuess
                 ball_delay = 30;
                 ball_is_under_platform = false;
                 lives--;
+            }
+        }
+
+        private async void PauseButton_OnClicked(object sender, EventArgs e)
+        {
+            int initSpeedX = ball.get_speedX();
+            int initSpeedY = ball.get_speedY();
+            ball.set_speed(0,0);
+            Stick.cancelMovement();
+            string answer = await DisplayActionSheet("Pause", "Return", null, "Restart Level", "Back to main menu");
+            if (answer == "Restart Level")
+            {
+                restartLevel();
+                ball.set_speed(initSpeedX, initSpeedY);
+                Stick.getMovementBack();
+            }
+            if (answer=="Back to main menu")
+            {
+                await Navigation.PopModalAsync();
+            }
+
+            if (answer == "Return")
+            {
+                ball.set_speed(initSpeedX,initSpeedY);
+                Stick.getMovementBack();
             }
         }
     }

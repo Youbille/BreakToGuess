@@ -37,9 +37,10 @@ namespace BreakToGuess
             {
                 
             }
-            else if (options == "Volume" || options == "No Volume" || options == "Ball Color")
-            {
 
+            if (options == "Ball Color")
+            {
+               await Navigation.PushModalAsync(new BallSelectionPage());
             }
 
         }

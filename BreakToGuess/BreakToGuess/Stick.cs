@@ -47,6 +47,14 @@ namespace BreakToGuess
             catch { }
         }
 
+        public static void cancelMovement()
+        {
+            Accelerometer.ReadingChanged -= Accelerometer_ReadingChanged;
+        }
+        public static void getMovementBack()
+        {
+            Accelerometer.ReadingChanged += Accelerometer_ReadingChanged;
+        }
         private static void Accelerometer_ReadingChanged(object sender, AccelerometerChangedEventArgs e)
         {
             double d = e.Reading.Acceleration.X;
