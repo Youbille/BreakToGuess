@@ -30,12 +30,12 @@
                     BackgroundColor="DarkGreen"
                     Clicked="Level3_OnClicked"
             />
-            <ImageButton x:Name="return"
+            <!--<ImageButton x:Name="return"
                          Source="returnArrow"
                          AbsoluteLayout.LayoutBounds="0,1,0.2,0.2"
                          AbsoluteLayout.LayoutFlags="All"
                          BackgroundColor="Transparent"
-                         Clicked="Return_OnClicked"></ImageButton>
+                         Clicked="Return_OnClicked"></ImageButton>-->
         </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

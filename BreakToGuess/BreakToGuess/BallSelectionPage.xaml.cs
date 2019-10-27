@@ -67,9 +67,9 @@ namespace BreakToGuess
             footBall.BackgroundColor = Color.Transparent;
         }
 
-        private void Return_OnClicked(object sender, EventArgs e)
-        {
-            Navigation.PopModalAsync();
-        }
+        //private void Return_OnClicked(object sender, EventArgs e)
+        //{
+        //    Navigation.PopModalAsync();
+        //}
     }
 }

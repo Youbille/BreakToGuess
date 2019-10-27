@@ -40,13 +40,13 @@ namespace BreakToGuess
 
             if (options == "Ball Color")
             {
-               await Navigation.PushModalAsync(new BallSelectionPage());
+               await Navigation.PushAsync(new BallSelectionPage());
             }
 
         }
         private void Button_OnClicked(object sender, EventArgs e)
         {
-            Navigation.PushModalAsync(new LevelsPage());
+            Navigation.PushAsync(new LevelsPage());
         }
     }
 }

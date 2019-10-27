@@ -37,6 +37,10 @@ namespace BreakToGuess
             livesLabel = this.FindByName<Label>("LivesLabel");
             Stick.Initialize();
             lives = 3;
+            if (ball_name == null)
+            {
+                ball_name = "Ball_breakToGuess.png";
+            }
             ball = new Ball(ball_name,5,App.Current.MainPage.Height/2,App.Current.MainPage.Width/2);
             templateBrick=new Brick(Color.Red, 0,0, 30,70);
             lay.Children.Add(Stick.platform);
