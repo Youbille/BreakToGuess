@@ -15,14 +15,14 @@ namespace BreakToGuess
     public partial class Page1 : ContentPage
     {
         private Stick stick = new Stick();
-        private int ball_delay;
         private Ball ball;
-        private bool ball_is_under_platform;
         private Random rand_direction = new Random();
         private Brick templateBrick;
-        private bool ball_brick_collision;
+        private bool ball_brick_collision, ball_is_under_platform;
         private Brick[,] grid;
-        public Page1()
+        private int lives, ball_delay;
+        private Label livesLabel;
+        public Page1(int width,int height, Color firstColor,Color secondColor)
         {
             try
             {
@@ -33,22 +33,22 @@ namespace BreakToGuess
                 DisplayAlert("Exception", e.ToString(), "OK");
             }
             AbsoluteLayout lay = this.FindByName<AbsoluteLayout>("LayoutPrincipal");
-            
-            //lay.Children.Add(templateBrick.get_boxView());
+            livesLabel = this.FindByName<Label>("LivesLabel");
             Stick.Initialize();
+            lives = 3;
             ball = new Ball("Ball_breakToGuess.png",5,App.Current.MainPage.Height/2,App.Current.MainPage.Width/2);
             templateBrick=new Brick(Color.Red, 0,0, 30,70);
             lay.Children.Add(Stick.platform);
             lay.Children.Add(ball.get_sprite());
             //grid =new Brick[(int)App.Current.MainPage.Width/templateBrick.get_height(),(int)App.Current.MainPage.Width/templateBrick.get_width()];
-            grid = new Brick[7,6];
+            grid = new Brick[width,height];
             for (int i = 0; i < grid.GetLength(0); i++)
             {
                 for (int j = 0; j < grid.GetLength(1); j++)
                 {
                     Color color;
-                    if((i+j)%2 ==0 ) color =Color.Red;
-                    else color = Color.DarkOrange;
+                    if((i+j)%2 ==0 ) color =firstColor;
+                    else color = secondColor;
                     grid[i,j] = new Brick(color,j*templateBrick.get_width(),i*templateBrick.get_height(),templateBrick.get_height(),templateBrick.get_width());
                     lay.Children.Add(grid[i,j].get_boxView());
                 }
@@ -77,7 +77,45 @@ namespace BreakToGuess
                     }
                 }
                 whenBallGetUnderPlatform();
+                if (lives == 0)
+                {
+                    triggerLoseView();
+                }
                 Device.BeginInvokeOnMainThread(mainDraw);
+            }
+        }
+
+        private void triggerLoseView() //TODO  : handle the lives=0 case
+        {
+            //Label loseLabel = this.FindByName<Label>("DefeatLabel");
+            //LivesLabel.Text = "You Lose !";
+            ball.set_speed(0,0);
+            Thread.Sleep(5000);
+            Navigation.PopModalAsync();
+            //string defeat = await DisplayActionSheet(
+            //    "You lose !",
+            //    "",
+            //    null,
+            //    "Retry",
+            //    "Back to main menu",
+            //    "Back to levels menu");
+            //if (defeat == "retry")
+            //{
+            //    restartLevel();
+            //}
+        }
+
+        private void restartLevel()
+        {
+            for (int i = 0; i < grid.GetLength(0); i++)
+            {
+                for (int j = 0; j < grid.GetLength(1); j++)
+                {
+                    Color color;
+                    if ((i + j) % 2 == 0) color = Color.Red;
+                    else color = Color.DarkOrange;
+                    grid[i, j] = new Brick(color, j * templateBrick.get_width(), i * templateBrick.get_height(), templateBrick.get_height(), templateBrick.get_width());
+                }
             }
         }
 
@@ -91,6 +129,7 @@ namespace BreakToGuess
                     grid[i, j].draw();
                 }
             }
+            livesLabel.Text = "Lives = " + lives;
         }
 
         private void whenBallGetUnderPlatform()
@@ -110,6 +149,7 @@ namespace BreakToGuess
                 }
                 ball_delay = 30;
                 ball_is_under_platform = false;
+                lives--;
             }
         }
     }

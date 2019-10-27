@@ -45,7 +45,7 @@ namespace BreakToGuess
         }
         private void Button_OnClicked(object sender, EventArgs e)
         {
-            Navigation.PushModalAsync(new Page1());
+            Navigation.PushModalAsync(new LevelsPage());
         }
     }
 }

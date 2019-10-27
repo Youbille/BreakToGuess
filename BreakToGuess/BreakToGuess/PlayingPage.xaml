@@ -7,7 +7,19 @@
              x:Class="BreakToGuess.Page1">
     <ContentPage.Content>
         <AbsoluteLayout x:Name="LayoutPrincipal" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" AnchorX="0" AnchorY= "0" BackgroundColor="White">
-
+            <Label x:Name ="LivesLabel"
+                TextColor="Black"
+                FontSize="Medium"
+                AbsoluteLayout.LayoutBounds="0.5,1,0.5,0.1"
+                AbsoluteLayout.LayoutFlags="All"
+            />
+            <!--<Label x:Name ="DefeatLabel"
+                   TextColor="Black"
+                   FontSize="Bold"
+                   BackgroundColor="Transparent"
+                   AbsoluteLayout.LayoutBounds="0.5,0.6,0.5,0.2"
+                   AbsoluteLayout.LayoutFlags="All"
+            />-->
         </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

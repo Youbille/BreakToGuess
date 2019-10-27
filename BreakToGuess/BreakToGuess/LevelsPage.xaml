@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="BreakToGuess.LevelsPage"
+             BackgroundImageSource="fond2.png"
+             >
+    <ContentPage.Content>
+        <AbsoluteLayout>
+            <Button x:Name="Level1"
+                    AbsoluteLayout.LayoutBounds="0.5, 0, 0.3,0.1"
+                    AbsoluteLayout.LayoutFlags="All"
+                    Text="Level 1"
+                    BackgroundColor="DarkRed"
+                    Clicked="Level1_OnClicked"
+                   />
+            <Button x:Name="Level2"
+                    AbsoluteLayout.LayoutBounds="0.5, 0.2, 0.3,0.1"
+                    AbsoluteLayout.LayoutFlags="All"
+                    Text="Level 2"
+                    BackgroundColor="Blue"
+                    Clicked="Level2_OnClicked"
+            />
+            <Button x:Name="Level3"
+                    AbsoluteLayout.LayoutBounds="0.5, 0.4, 0.3,0.1"
+                    AbsoluteLayout.LayoutFlags="All"
+                    Text="Level 3"
+                    BackgroundColor="DarkGreen"
+                    Clicked="Level3_OnClicked"
+            />
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

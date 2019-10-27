@@ -15,13 +15,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="LevelPage.xaml.cs">
-      <DependentUpon>LevelPage.xaml</DependentUpon>
+    <Compile Update="PlayingPage.xaml.cs">
+      <DependentUpon>PlayingPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="LevelPage.xaml">
+    <EmbeddedResource Update="LevelsPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="PlayingPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
