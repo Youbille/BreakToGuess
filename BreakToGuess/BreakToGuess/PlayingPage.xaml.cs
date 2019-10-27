@@ -23,7 +23,7 @@ namespace BreakToGuess
         private int lives, ball_delay;
         private Label livesLabel;
         public static string ball_name;
-        public Page1(int width,int height, Color firstColor,Color secondColor)
+        public Page1(int gridWidth,int gridHeight, Color firstColor,Color secondColor)
         {
             try
             {
@@ -42,11 +42,11 @@ namespace BreakToGuess
                 ball_name = "Ball_breakToGuess.png";
             }
             ball = new Ball(ball_name,5,App.Current.MainPage.Height/2,App.Current.MainPage.Width/2);
-            templateBrick=new Brick(Color.Red, 0,0, 30,70);
+            //templateBrick=new Brick(Color.Red, 0,0, 30,70);
             lay.Children.Add(Stick.platform);
             lay.Children.Add(ball.get_sprite());
             //grid =new Brick[(int)App.Current.MainPage.Width/templateBrick.get_height(),(int)App.Current.MainPage.Width/templateBrick.get_width()];
-            grid = new Brick[width,height];
+            grid = new Brick[gridHeight,gridWidth];
             for (int i = 0; i < grid.GetLength(0); i++)
             {
                 for (int j = 0; j < grid.GetLength(1); j++)
@@ -54,8 +54,10 @@ namespace BreakToGuess
                     Color color;
                     if((i+j)%2 ==0 ) color =firstColor;
                     else color = secondColor;
-                    grid[i,j] = new Brick(color,j*templateBrick.get_width(),i*templateBrick.get_height(),templateBrick.get_height(),templateBrick.get_width());
+                    grid[i,j] = new Brick(color,j* (App.Current.MainPage.Width / gridWidth), i* (App.Current.MainPage.Width / gridHeight), App.Current.MainPage.Width / gridHeight, App.Current.MainPage.Width / gridWidth);
                     lay.Children.Add(grid[i,j].get_boxView());
+                    grid[i, j].draw();
+                    Thread.Sleep(50);
                 }
             }
             Thread.Sleep(1000);
@@ -68,7 +70,7 @@ namespace BreakToGuess
             ball_delay--;
             if (ball_delay <= 0)
             {
-                ball.setX(ball.getX() + ball.get_speedX());//Todo : Change Speed
+                ball.setX(ball.getX() + ball.get_speedX());
                 ball.setY(ball.getY() + ball.get_speedY());
                 ball_is_under_platform = ball.handle_collisions(Width,Height, stick ); //the collisions handler says if the ball is under the platform or not
                 //ball_brick_collision = ball.brick_collision(templateBrick);
@@ -79,6 +81,7 @@ namespace BreakToGuess
                     {
                         ball_brick_collision = ball.brick_collision(grid[i, j]);
                         grid[i, j].collision_with_ball(ball_brick_collision);
+                        if (ball_brick_collision) grid[i, j].draw();
                         ball_brick_collision = false;
                     }
                 }
@@ -91,24 +94,23 @@ namespace BreakToGuess
             }
         }
 
-        private void triggerLoseView() //TODO  : handle the lives=0 case
+        private async void triggerLoseView() //TODO  : handle the lives=0 case
         {
-            //Label loseLabel = this.FindByName<Label>("DefeatLabel");
-            //LivesLabel.Text = "You Lose !";
-            ball.set_speed(0,0);
-            Thread.Sleep(5000);
-            Navigation.PopModalAsync();
-            //string defeat = await DisplayActionSheet(
-            //    "You lose !",
-            //    "",
-            //    null,
-            //    "Retry",
-            //    "Back to main menu",
-            //    "Back to levels menu");
-            //if (defeat == "retry")
+            //ball.set_speed(0, 0);
+            //Stick.cancelMovement();
+            //bool answer = await DisplayAlert("Defeat", "Try again ?", "Yes", "No");
+            //if (answer) restartLevel();
+            //else
             //{
-            //    restartLevel();
+            //    Stick.getMovementBack();
+            //    ball.set_speed(5,5);
+            //    await Navigation.PopModalAsync();
             //}
+            ball.set_speed(0, 0);
+            Thread.Sleep(5000);
+            ball.set_speed(5,5);
+            await Navigation.PopModalAsync();
+
         }
 
         private void restartLevel()
@@ -119,9 +121,12 @@ namespace BreakToGuess
                 {
                     grid[i,j].setX(j * templateBrick.get_width());
                     grid[i,j].setY(i * templateBrick.get_height());
+                    grid[i, j].draw();
                 }
             }
             lives = 3;
+            Stick.getMovementBack();
+            ball.set_speed(5,5);
             Thread.Sleep(2000);
             ball.set_pos(App.Current.MainPage.Width / 2, App.Current.MainPage.Height / 2);
         }
@@ -129,13 +134,13 @@ namespace BreakToGuess
         private void mainDraw()
         {
             if (!ball_is_under_platform) ball.draw();
-            for (int i = 0; i < grid.GetLength(0); i++)
-            {
-                for (int j = 0; j < grid.GetLength(1); j++)
-                {
-                    grid[i, j].draw();
-                }
-            }
+            //for (int i = 0; i < grid.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < grid.GetLength(1); j++)
+            //    {
+            //        grid[i, j].draw();
+            //    }
+            //}
             livesLabel.Text = "Lives = " + lives;
         }
 
@@ -162,25 +167,23 @@ namespace BreakToGuess
 
         private async void PauseButton_OnClicked(object sender, EventArgs e)
         {
-            int initSpeedX = ball.get_speedX();
-            int initSpeedY = ball.get_speedY();
+
             ball.set_speed(0,0);
             Stick.cancelMovement();
             string answer = await DisplayActionSheet("Pause", "Return", null, "Restart Level", "Back to main menu");
             if (answer == "Restart Level")
             {
                 restartLevel();
-                ball.set_speed(initSpeedX, initSpeedY);
-                Stick.getMovementBack();
             }
             if (answer=="Back to main menu")
             {
                 await Navigation.PopModalAsync();
+                Stick.getMovementBack();
             }
 
             if (answer == "Return")
             {
-                ball.set_speed(initSpeedX,initSpeedY);
+                ball.set_speed(5,5);
                 Stick.getMovementBack();
             }
         }

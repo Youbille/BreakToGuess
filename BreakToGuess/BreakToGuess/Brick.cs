@@ -13,10 +13,10 @@ namespace BreakToGuess
         private double Y;
         private Color color;
         private int damage;
-        private int trueHeight;
-        private int trueWidth;
+        private double trueHeight;
+        private double trueWidth;
         //private SynchronizationContext context;
-        public Brick(Color color_brick, double posX, double posY, int reqHeight, int reqWidth)
+        public Brick(Color color_brick, double posX, double posY, double reqHeight, double reqWidth)
         {
             //context = SynchronizationContext.Current;
             damage = 0;
@@ -55,11 +55,11 @@ namespace BreakToGuess
             return Y;
         }
 
-        public int get_height()
+        public double get_height()
         {
             return trueHeight;
         }
-        public int get_width()
+        public double get_width()
         {
             return trueWidth;
         }
