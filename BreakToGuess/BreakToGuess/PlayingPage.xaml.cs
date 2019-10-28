@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
-
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -21,9 +18,11 @@ namespace BreakToGuess
         private bool ball_brick_collision, ball_is_under_platform;
         private Brick[,] grid;
         private int lives, ball_delay;
-        private Label livesLabel;
+        private Label livesLabel,victoryLabel;
         public static string ball_name;
-        public Page1(int gridWidth,int gridHeight, Color firstColor,Color secondColor)
+        private static string answer;
+        private string winmessage;
+        public Page1(int gridWidth,int gridHeight, Color firstColor,Color secondColor, string image_word)
         {
             try
             {
@@ -35,7 +34,10 @@ namespace BreakToGuess
             }
             AbsoluteLayout lay = this.FindByName<AbsoluteLayout>("LayoutPrincipal");
             livesLabel = this.FindByName<Label>("LivesLabel");
+            victoryLabel = this.FindByName<Label>("winLabel");
             Stick.Initialize();
+            answer = image_word;
+            winmessage = "";
             lives = 3;
             if (ball_name == null)
             {
@@ -90,22 +92,25 @@ namespace BreakToGuess
                 {
                     triggerLoseView();
                 }
+
+                if (!String.IsNullOrEmpty(AnswerPage.answerInput))
+                {
+                    if (AnswerPage.answerInput == answer)
+                    {
+                        winmessage = "You WIN!";
+                        Thread.Sleep(5000);
+                        winmessage = "";
+                        Navigation.PopModalAsync();
+                    }
+
+                    //TestIfAnswerWorks(ball.get_speedX(),ball.get_speedY());
+                }
                 Device.BeginInvokeOnMainThread(mainDraw);
             }
         }
 
-        private async void triggerLoseView() //TODO  : handle the lives=0 case
+        private async void triggerLoseView() 
         {
-            //ball.set_speed(0, 0);
-            //Stick.cancelMovement();
-            //bool answer = await DisplayAlert("Defeat", "Try again ?", "Yes", "No");
-            //if (answer) restartLevel();
-            //else
-            //{
-            //    Stick.getMovementBack();
-            //    ball.set_speed(5,5);
-            //    await Navigation.PopModalAsync();
-            //}
             ball.set_speed(0, 0);
             Thread.Sleep(5000);
             ball.set_speed(5,5);
@@ -142,6 +147,7 @@ namespace BreakToGuess
             //    }
             //}
             livesLabel.Text = "Lives = " + lives;
+            victoryLabel.Text = winmessage;
         }
 
         private void whenBallGetUnderPlatform()
@@ -185,6 +191,55 @@ namespace BreakToGuess
             {
                 ball.set_speed(5,5);
                 Stick.getMovementBack();
+            }
+        }
+
+        private async void AnswerButton_OnClicked(object sender, EventArgs e)
+        {
+            ball.set_speed(0,0);    
+            await Navigation.PushModalAsync(new AnswerPage());
+        }
+
+        private async void TestIfAnswerWorks(int initX, int initY)
+        {
+            string message;
+            if (AnswerPage.answerInput == answer)
+            {
+                message = "You win !";
+                bool winExit = await DisplayAlert(message, "Restart ?", "Yes", "No");
+                if (winExit)
+                {
+                    restartLevel();
+                }
+                else
+                {
+                    Stick.getMovementBack();
+                    ball.set_speed(initX, initY);
+                    await Navigation.PopModalAsync();
+                }
+            }
+            else
+            {
+                lives--;
+                message = "Wrong answer, try again !";
+                string exit = await DisplayActionSheet(message, "Back to game", null, "Restart Level", "Back to main menu");
+                if (exit == "Back to game")
+                {
+                    Stick.getMovementBack();
+                    ball.set_speed(initX, initY);
+                }
+
+                if (exit == "Restart Level")
+                {
+                    restartLevel();
+                }
+
+                if (exit == "Back to main menu")
+                {
+                    Stick.getMovementBack();
+                    ball.set_speed(initX, initY);
+                    await Navigation.PopModalAsync();
+                }
             }
         }
     }

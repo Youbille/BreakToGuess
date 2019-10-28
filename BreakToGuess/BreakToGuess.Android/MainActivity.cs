@@ -29,5 +29,6 @@ namespace BreakToGuess.Droid
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+
     }
 }

@@ -20,13 +20,19 @@
                          AbsoluteLayout.LayoutFlags="All"
                          Clicked="PauseButton_OnClicked"
                     />
-            <!--<Label x:Name ="DefeatLabel"
-                   TextColor="Black"
-                   FontSize="Bold"
-                   BackgroundColor="Transparent"
-                   AbsoluteLayout.LayoutBounds="0.5,0.6,0.5,0.2"
-                   AbsoluteLayout.LayoutFlags="All"
-            />-->
+            <ImageButton x:Name ="AnswerButton"
+                         Source="question_mark.png"
+                         BackgroundColor="White"
+                         AbsoluteLayout.LayoutBounds="0.9,1,0.1,0.1"
+                         AbsoluteLayout.LayoutFlags="All"
+                         Clicked="AnswerButton_OnClicked"
+            />
+            <Label x:Name ="winLabel"
+                   FontSize="Large"
+                   TextColor="Crimson"
+                   AbsoluteLayout.LayoutBounds="0.5,0.8,0.8,0.2"
+                   AbsoluteLayout.LayoutFlags="All"></Label>
+            
         </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

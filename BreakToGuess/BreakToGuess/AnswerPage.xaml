@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="BreakToGuess.AnswerPage">
+    <ContentPage.Content>
+        <AbsoluteLayout>
+            <Entry x:Name ="GuessEntry"
+                   Placeholder="Guess !"
+                   TextColor="Black"
+                   FontSize="Caption"
+                    AbsoluteLayout.LayoutBounds="0.5,0.5,0.6,0.3"
+                    AbsoluteLayout.LayoutFlags="All"
+             >
+            </Entry>
+            <ImageButton
+                Source ="validation.png"
+                AbsoluteLayout.LayoutBounds="1,1,0.2,0.2"
+                AbsoluteLayout.LayoutFlags="All"
+                BackgroundColor="Transparent"
+                Clicked="ImageButton_OnClicked"></ImageButton>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>
