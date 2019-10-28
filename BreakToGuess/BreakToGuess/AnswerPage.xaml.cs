@@ -18,7 +18,8 @@ namespace BreakToGuess
         {
             InitializeComponent();
             findImage = this.FindByName<Entry>("GuessEntry");
-
+            Label helpLabel = this.FindByName<Label>("HelpLabel");
+            helpLabel.Text = "Characters in the word to guess : " + Page1.answer.Length;
         }
         private async void ImageButton_OnClicked(object sender, EventArgs e)
         {

@@ -18,8 +18,7 @@ namespace BreakToGuess
         private Brick[,] grid; //This is the matrix used to place the bricks could have used the layout grid
         private int lives, ball_delay;
         private Label livesLabel,victoryLabel;
-        public static string ball_name;
-        private static string answer; //This is the answer that is linked to the level
+        public static string ball_name,answer; 
         private string messageWinLose; //This is the message shown when you win
         private Image imageToGuess; //this is the image set at the back of the level
         public Page1(int gridWidth,int gridHeight, Color firstColor,Color secondColor, string image_word, string sourceImage)
@@ -112,7 +111,7 @@ namespace BreakToGuess
 
                 if (!String.IsNullOrEmpty(AnswerPage.answerInput))
                 {
-                    if (AnswerPage.answerInput == answer)
+                    if (AnswerPage.answerInput.ToLower() == answer.ToLower())
                     {
                         messageWinLose = "You WIN!";
                         Thread.Sleep(4000);
