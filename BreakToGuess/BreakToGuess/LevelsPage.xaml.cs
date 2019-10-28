@@ -19,22 +19,18 @@ namespace BreakToGuess
 
         private void Level1_OnClicked(object sender, EventArgs e)
         {
-            Navigation.PushModalAsync(new Page1(3,5,Color.DarkOrange, Color.Red,"Da Vinci","DaVinci.jpg"));
+            Navigation.PushModalAsync(new Page1(1, 50, Color.DarkOrange, Color.Red, "da vinci", "DaVinci.jpg"));
         }
 
         private void Level2_OnClicked(object sender, EventArgs e)
         {
-            Navigation.PushModalAsync(new Page1(2, 4, Color.Blue, Color.BlueViolet,"blue","DaVinci.jpg"));
+            Navigation.PushModalAsync(new Page1(5, 20, Color.Blue, Color.BlueViolet, "china", "chinaWall.jpg"));
         }
 
         private void Level3_OnClicked(object sender, EventArgs e)
         {
-            Navigation.PushModalAsync(new Page1(10, 20, Color.DarkGreen, Color.ForestGreen,"green","DaVinci.jpg"));
+            Navigation.PushModalAsync(new Page1(7, 15, Color.DarkGreen, Color.ForestGreen, "volleyball",
+                "Volleyball.jpg"));
         }
-
-        //private void Return_OnClicked(object sender, EventArgs e)
-        //{
-        //    Navigation.PopModalAsync();
-        //}
     }
 }

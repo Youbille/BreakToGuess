@@ -24,20 +24,7 @@ namespace BreakToGuess
                 "Settings",
                 "Cancel",
                 null,
-                "Music",
-                "No Music",
-                "Volume",
-                "No Volume",
                 "Ball Color");
-            if (options == "Music")
-            {
-                DependencyService.Get<IAudioService>().PlayAudioFile("musique.mp3");
-            }
-            else if (options == "No Music")
-            {
-                
-            }
-
             if (options == "Ball Color")
             {
                await Navigation.PushAsync(new BallSelectionPage());

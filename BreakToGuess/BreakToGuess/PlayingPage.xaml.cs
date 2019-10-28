@@ -11,19 +11,21 @@ namespace BreakToGuess
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Page1 : ContentPage
     {
-        private Stick stick = new Stick();
+        private Stick stick = new Stick(); //THe platform   
         private Ball ball;
-        private Random rand_direction = new Random();
+        private Random rand_direction = new Random(); //This used when the ball is reset
         private bool ball_brick_collision, ball_is_under_platform;
-        private Brick[,] grid;
+        private Brick[,] grid; //This is the matrix used to place the bricks could have used the layout grid
         private int lives, ball_delay;
         private Label livesLabel,victoryLabel;
         public static string ball_name;
-        private static string answer;
-        private string winmessage;
-        private Image imageToGuess;
+        private static string answer; //This is the answer that is linked to the level
+        private string messageWinLose; //This is the message shown when you win
+        private Image imageToGuess; //this is the image set at the back of the level
         public Page1(int gridWidth,int gridHeight, Color firstColor,Color secondColor, string image_word, string sourceImage)
         {
+
+            //DependencyService.Get<IAudioService>().PlayAudioFile("musique.mp3");
             try
             {
                 InitializeComponent();
@@ -32,12 +34,12 @@ namespace BreakToGuess
             {
                 DisplayAlert("Exception", e.ToString(), "OK");
             }
-            AbsoluteLayout lay = this.FindByName<AbsoluteLayout>("LayoutPrincipal");
+            AbsoluteLayout lay = this.FindByName<AbsoluteLayout>("LayoutPrincipal"); //This is the layout that is gonna handle the game
             livesLabel = this.FindByName<Label>("LivesLabel");
             victoryLabel = this.FindByName<Label>("winLabel");
             Stick.Initialize();
             answer = image_word;
-            winmessage = "";
+            messageWinLose = "";
             lives = 10;
             imageToGuess = new Image{Source = sourceImage};
             if (ball_name == null)
@@ -46,8 +48,8 @@ namespace BreakToGuess
             }
             ball = new Ball(ball_name,5,App.Current.MainPage.Height/2,App.Current.MainPage.Width/2);
             lay.Children.Add(Stick.platform);
-            lay.Children.Add(ball.get_sprite());
             lay.Children.Add(imageToGuess);
+            lay.Children.Add(ball.get_sprite());
             grid = new Brick[gridHeight,gridWidth];
             for (int i = 0; i < grid.GetLength(0); i++)
             {
@@ -93,13 +95,18 @@ namespace BreakToGuess
                     {
                         ball_brick_collision = ball.brick_collision(grid[i, j]);
                         grid[i, j].collision_with_ball(ball_brick_collision);
-                        if (ball_brick_collision) grid[i, j].draw();
+                        if (ball_brick_collision)
+                        {
+                            DependencyService.Get<IAudioService>().PlayAudioFile("brick_broken.mp3");
+                            grid[i, j].draw();
+                        }
                         ball_brick_collision = false;
                     }
                 }
                 whenBallGetUnderPlatform();
                 if (lives == 0)
                 {
+                    messageWinLose = "You LOSE !";
                     triggerLoseView();
                 }
 
@@ -107,9 +114,9 @@ namespace BreakToGuess
                 {
                     if (AnswerPage.answerInput == answer)
                     {
-                        winmessage = "You WIN!";
+                        messageWinLose = "You WIN!";
                         Thread.Sleep(4000);
-                        winmessage = "";
+                        messageWinLose = "";
                         Navigation.PopModalAsync();
                     }
                     else
@@ -124,13 +131,13 @@ namespace BreakToGuess
             }
         }
 
-        private async void triggerLoseView() 
+        private void triggerLoseView() 
         {
+            //victoryLabel.Text = messageWinLose;
             ball.set_speed(0, 0);
-            Thread.Sleep(5000);
+            Thread.Sleep(3000);
             ball.set_speed(5,5);
-            await Navigation.PopModalAsync();
-
+            Navigation.PopModalAsync();
         }
 
         private void restartLevel()
@@ -164,15 +171,8 @@ namespace BreakToGuess
         private void mainDraw()
         {
             if (!ball_is_under_platform) ball.draw();
-            //for (int i = 0; i < grid.GetLength(0); i++)
-            //{
-            //    for (int j = 0; j < grid.GetLength(1); j++)
-            //    {
-            //        grid[i, j].draw();
-            //    }
-            //}
             livesLabel.Text = "Lives = " + lives;
-            victoryLabel.Text = winmessage;
+            victoryLabel.Text = messageWinLose;
         }
 
         private void whenBallGetUnderPlatform()

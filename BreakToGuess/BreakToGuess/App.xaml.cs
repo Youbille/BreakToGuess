@@ -15,6 +15,7 @@ namespace BreakToGuess
 
         protected override void OnStart()
         {
+            DependencyService.Get<IAudioService>().PlayAudioFile("musique.mp3");
             // Handle when your app starts
         }
 
