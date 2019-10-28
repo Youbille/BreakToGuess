@@ -153,5 +153,8 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\validation.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\DaVinci.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

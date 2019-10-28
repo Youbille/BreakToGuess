@@ -14,7 +14,6 @@ namespace BreakToGuess
         private Stick stick = new Stick();
         private Ball ball;
         private Random rand_direction = new Random();
-        private Brick templateBrick;
         private bool ball_brick_collision, ball_is_under_platform;
         private Brick[,] grid;
         private int lives, ball_delay;
@@ -22,7 +21,8 @@ namespace BreakToGuess
         public static string ball_name;
         private static string answer;
         private string winmessage;
-        public Page1(int gridWidth,int gridHeight, Color firstColor,Color secondColor, string image_word)
+        private Image imageToGuess;
+        public Page1(int gridWidth,int gridHeight, Color firstColor,Color secondColor, string image_word, string sourceImage)
         {
             try
             {
@@ -38,16 +38,16 @@ namespace BreakToGuess
             Stick.Initialize();
             answer = image_word;
             winmessage = "";
-            lives = 3;
+            lives = 10;
+            imageToGuess = new Image{Source = sourceImage};
             if (ball_name == null)
             {
                 ball_name = "Ball_breakToGuess.png";
             }
             ball = new Ball(ball_name,5,App.Current.MainPage.Height/2,App.Current.MainPage.Width/2);
-            //templateBrick=new Brick(Color.Red, 0,0, 30,70);
             lay.Children.Add(Stick.platform);
             lay.Children.Add(ball.get_sprite());
-            //grid =new Brick[(int)App.Current.MainPage.Width/templateBrick.get_height(),(int)App.Current.MainPage.Width/templateBrick.get_width()];
+            lay.Children.Add(imageToGuess);
             grid = new Brick[gridHeight,gridWidth];
             for (int i = 0; i < grid.GetLength(0); i++)
             {
@@ -59,10 +59,22 @@ namespace BreakToGuess
                     grid[i,j] = new Brick(color,j* (App.Current.MainPage.Width / gridWidth), i* (App.Current.MainPage.Width / gridHeight), App.Current.MainPage.Width / gridHeight, App.Current.MainPage.Width / gridWidth);
                     lay.Children.Add(grid[i,j].get_boxView());
                     grid[i, j].draw();
-                    Thread.Sleep(50);
                 }
             }
             Thread.Sleep(1000);
+            ball.set_speed(rand_direction.Next(-7, 7), -5);
+            if (ball.get_speedX() > -4 && ball.get_speedX() < 4)
+            {
+                if (ball.get_speedX() < 0)
+                {
+                    ball.set_speed(-5, -5);
+                }
+                else
+                {
+                    ball.set_speed(5, -5);
+                }
+            }
+            ball.set_pos(App.Current.MainPage.Width / 2, 3 * App.Current.MainPage.Height / 4);
             Timer mainTimer = new Timer(timer_tick);
             mainTimer.Change(0, 33);
         }
@@ -75,8 +87,6 @@ namespace BreakToGuess
                 ball.setX(ball.getX() + ball.get_speedX());
                 ball.setY(ball.getY() + ball.get_speedY());
                 ball_is_under_platform = ball.handle_collisions(Width,Height, stick ); //the collisions handler says if the ball is under the platform or not
-                //ball_brick_collision = ball.brick_collision(templateBrick);
-                //templateBrick.collision_with_ball(ball_brick_collision);
                 for (int i = 0; i < grid.GetLength(0); i++)
                 {
                     for (int j = 0; j < grid.GetLength(1); j++)
@@ -98,12 +108,17 @@ namespace BreakToGuess
                     if (AnswerPage.answerInput == answer)
                     {
                         winmessage = "You WIN!";
-                        Thread.Sleep(5000);
+                        Thread.Sleep(4000);
                         winmessage = "";
                         Navigation.PopModalAsync();
                     }
-
-                    //TestIfAnswerWorks(ball.get_speedX(),ball.get_speedY());
+                    else
+                    {
+                        lives--;
+                        ball.set_pos(Width/2,4*Height/5);
+                        ball.set_speed(5,-5);
+                        AnswerPage.answerInput = "";
+                    }
                 }
                 Device.BeginInvokeOnMainThread(mainDraw);
             }
@@ -124,16 +139,26 @@ namespace BreakToGuess
             {
                 for (int j = 0; j < grid.GetLength(1); j++)
                 {
-                    grid[i,j].setX(j * templateBrick.get_width());
-                    grid[i,j].setY(i * templateBrick.get_height());
+                    grid[i,j].setX(j * grid[i,j].get_width());
+                    grid[i,j].setY(i * grid[i, j].get_height());
                     grid[i, j].draw();
                 }
             }
-            lives = 3;
+            lives = 10;
             Stick.getMovementBack();
-            ball.set_speed(5,5);
-            Thread.Sleep(2000);
-            ball.set_pos(App.Current.MainPage.Width / 2, App.Current.MainPage.Height / 2);
+            ball.set_speed(rand_direction.Next(-7,7), -5);
+            if (ball.get_speedX() >-4 && ball.get_speedX()<4)
+            {
+                if (ball.get_speedX()<0)
+                {
+                    ball.set_speed(-5,-5);
+                }
+                else
+                {
+                    ball.set_speed(5, -5);
+                }
+            }
+            ball.set_pos(App.Current.MainPage.Width / 2, 3*App.Current.MainPage.Height / 4);
         }
 
         private void mainDraw()
@@ -173,7 +198,8 @@ namespace BreakToGuess
 
         private async void PauseButton_OnClicked(object sender, EventArgs e)
         {
-
+            int initX = ball.get_speedX();
+            int initY = ball.get_speedY();
             ball.set_speed(0,0);
             Stick.cancelMovement();
             string answer = await DisplayActionSheet("Pause", "Return", null, "Restart Level", "Back to main menu");
@@ -189,7 +215,7 @@ namespace BreakToGuess
 
             if (answer == "Return")
             {
-                ball.set_speed(5,5);
+                ball.set_speed(initX,initY);
                 Stick.getMovementBack();
             }
         }
@@ -198,49 +224,6 @@ namespace BreakToGuess
         {
             ball.set_speed(0,0);    
             await Navigation.PushModalAsync(new AnswerPage());
-        }
-
-        private async void TestIfAnswerWorks(int initX, int initY)
-        {
-            string message;
-            if (AnswerPage.answerInput == answer)
-            {
-                message = "You win !";
-                bool winExit = await DisplayAlert(message, "Restart ?", "Yes", "No");
-                if (winExit)
-                {
-                    restartLevel();
-                }
-                else
-                {
-                    Stick.getMovementBack();
-                    ball.set_speed(initX, initY);
-                    await Navigation.PopModalAsync();
-                }
-            }
-            else
-            {
-                lives--;
-                message = "Wrong answer, try again !";
-                string exit = await DisplayActionSheet(message, "Back to game", null, "Restart Level", "Back to main menu");
-                if (exit == "Back to game")
-                {
-                    Stick.getMovementBack();
-                    ball.set_speed(initX, initY);
-                }
-
-                if (exit == "Restart Level")
-                {
-                    restartLevel();
-                }
-
-                if (exit == "Back to main menu")
-                {
-                    Stick.getMovementBack();
-                    ball.set_speed(initX, initY);
-                    await Navigation.PopModalAsync();
-                }
-            }
         }
     }
 }
